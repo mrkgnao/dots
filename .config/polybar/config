@@ -1,0 +1,354 @@
+[theme/atom-one-dark]
+
+mono1 = #ABB2BF
+mono2 = #828997
+mono3 = #5C6370
+
+cyan = #56B6C2
+blue = #61AFEF
+purple = #C678DD
+green = #98C379
+red1 = #E06C75
+red2 = #BE5046
+orange1 = #D19A66
+orange2 = #E5C07B
+
+syntax-fg = ${self.mono1}
+syntax-bg = #8823272E
+syntax-gutter = #636D83
+syntax-accent = #528BFF
+
+syntax-bg-alt = #0023272E
+
+[theme]
+inherit = theme/atom-one-dark
+red = red1
+orange = orange1
+
+[colors]
+background = ${theme.syntax-bg}
+background-alt = ${theme.syntax-bg-alt}
+background-opaque = #222222
+
+foreground = ${theme.syntax-fg}
+foreground-alt = ${theme.mono2}
+
+primary = ${theme.blue}
+secondary = ${theme.purple}
+alert = ${theme.red}
+
+good = ${theme.green}
+nominal = ${theme.blue}
+degraded = ${theme.red1}
+
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+[include/bars]
+width = 100%
+height = 30
+offset-x = 0
+offset-y = 0
+; background = ${colors.background}
+background = 
+foreground = ${colors.foreground}
+
+overline-size = 2
+overline-color = #f00
+underline-size = 1
+underline-color = ${theme/atom-one-dark.cyan}
+
+border-size = 8
+
+padding-left = 1
+padding-right = 1
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = Iosevka:Medium:pixelsize=12
+font-1 = FontAwesome:pixelsize=12;-1
+font-2 = Iosevka:Heavy:pixelsize=12
+
+[bar/top]
+inherit = include/bars
+
+modules-left = battery-time-left battery spacer volume spacer backlight
+modules-center = i3
+modules-right = date time
+
+border-bottom-size = 0
+
+[bar/bottom]
+inherit = include/bars
+
+bottom = true
+
+modules-left = wireless-ip spacer wireless-down wireless-up
+modules-center = mpd
+modules-right = cpu clock-speed spacer memory spacer temperature
+
+border-top-size = 0
+
+
+[module/spacer]
+type = custom/text
+content = " "
+content-padding = 0
+content-foreground = ${theme.mono3}
+
+[module/clock-speed]
+type = custom/script
+exec = "lscpu | grep MHz | sed 's/[^0-9]*\(.*\)\..*/\1 MHz/'"
+format-underline = ${theme.mono3}
+interval = 5
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:100:...%
+
+
+[module/xkeyboard]
+type = internal/xkeyboard
+
+;label-layout = %{F#55}%{F-} %layout%
+label-layout = %layout%
+label-layout-underline = ${colors.secondary}
+
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-background = ${colors.secondary}
+label-indicator-underline = ${colors.secondary}
+
+[module/mpd]
+type = internal/mpd
+
+host = 127.0.0.1
+port = 6600
+
+interval = 1
+
+format-online = "<label-song> %{B#ABB2BF F#23272E} <label-time> %{B- F-}"
+format-online-underline = ${theme.syntax-fg}
+label-song = %artist% / %album% - %title%
+
+[module/freespace]
+type = internal/fs
+; scroll-up = i3wm-wsnext
+; scroll-down = i3wm-wsprev
+interval = 25
+
+mount-0 = /
+mount-1 = /data
+
+format-prefix = "free "
+
+label-mounted = %mountpoint% %free%
+; label-unmounted-foreground = ${colors.foreground-alt}
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+; strip-wsnumbers = true
+; pin-workspaces = true
+
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.primary}
+
+label-focused = %index%
+label-focused-background = ${colors.background-alt}
+label-focused-underline = ${colors.primary}
+label-focused-padding = 2
+
+label-unfocused = %index%
+label-unfocused-padding = 2
+
+label-urgent = %index%
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+label-visible = %index%
+label-visible-background = ${self.label-focused-background}
+label-visible-underline = ${self.label-focused-underline}
+label-visible-padding = ${self.label-focused-padding}
+
+; ws-icon-0 = 1;
+; ws-icon-1 = 2;
+; ws-icon-2 = 3;
+; ws-icon-3 = 4;
+; ws-icon-4 = 5;
+; ws-icon-5 = 6;
+; ws-icon-6 = 7;
+; ws-icon-7 = 8;
+; ws-icon-8 = 9;
+; ws-icon-9 = 10;
+
+[module/date]
+type = internal/date
+interval = 1
+format-underline = ${theme.mono3}
+
+date = %a %Y-%m-%d
+date-alt = ${self.date}
+label = %date%
+
+[module/time]
+inherit = module/date
+
+time = %H:%M:%S %z
+time-alt = ${self.time}
+label = %time%
+
+[include/percentage-meter-format]
+label = %percentage:4:3%
+format-prefix-foreground = ${theme.mono2}
+interval = 2
+
+[module/volume]
+type = internal/volume
+
+master-mixer = Master
+
+format-volume = <label-volume>
+label-volume = "%{F#56B6C2}%{F-} %percentage:3:3%"
+label-volume-foreground = ${root.foreground}
+format-volume-underline = ${theme.cyan}
+
+format-muted = <label-muted>
+label-muted = muted
+label-muted-foreground = #66
+
+[module/backlight]
+type = custom/script
+exec = "light | cut -d'.' -f1"
+
+label = %output:3:3%
+format-underline = ${theme.orange2}
+format-prefix = " "
+format-prefix-foreground = ${self.format-underline}
+interval = 0.5
+
+; -------------------------------------------------------------------------------
+; System monitoring
+; -------------------------------------------------------------------------------
+
+
+[module/cpu]
+type = internal/cpu
+inherit = include/percentage-meter-format
+
+format-prefix = "cpu"
+format-prefix-font = 2
+format-underline = ${theme.mono3}
+
+
+[module/memory]
+type = internal/memory
+inherit = include/percentage-meter-format
+
+format-underline = ${theme.mono3}
+label = %percentage_used:4:3%
+
+format-prefix = "mem"
+
+[module/battery]
+type = internal/battery
+
+battery = BAT0
+adapter = ADP0
+label-charging = %percentage:3:3%
+label-discharging = ${self.label-charging}
+
+format-charging = <label-charging>
+format-charging-prefix = " "
+format-charging-prefix-foreground = ${theme.green}
+format-charging-underline = ${theme.green}
+
+format-discharging = <label-discharging>
+format-discharging-prefix = ${self.format-charging-prefix}
+format-discharging-prefix-foreground = ${theme.orange1}
+format-discharging-underline = ${theme.orange1}
+
+format-full = <label-full>
+format-full-prefix = ${self.format-charging-prefix}
+format-full-prefix-foreground = ${theme.blue}
+format-full-underline = ${theme.blue}
+
+[module/battery-time-left]
+type = internal/battery
+
+battery = BAT0
+adapter = ADP0
+label-charging = %time:5:5%
+label-discharging = ${self.label-charging}
+
+format-charging = <label-charging>
+format-charging-prefix = " "
+format-charging-prefix-foreground = ${theme.green}
+format-charging-underline = ${theme.green}
+
+format-discharging = <label-discharging>
+format-discharging-prefix = ${self.format-charging-prefix}
+format-discharging-prefix-foreground = ${theme.orange1}
+format-discharging-underline = ${theme.orange1}
+
+format-full = <label-full>
+format-full-prefix = ${self.format-charging-prefix}
+format-full-prefix-foreground = ${theme.blue}
+format-full-underline = ${theme.blue}
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 50
+
+interval = 1
+
+format = "%{F#61AFEF}%{F-} <label>"
+format-underline = ${colors.nominal}
+label = %temperature%
+
+format-warn = "%{F#E06C75}%{F-} <label-warn>"
+format-warn-underline = ${colors.degraded}
+label-warn = %temperature%
+label-warn-foreground = ${colors.degraded}
+
+
+; -------------------------------------------------------------------------------
+; Network stats
+; -------------------------------------------------------------------------------
+
+
+[module/wireless-up]
+type = internal/network
+interface = wlp8s0
+
+interval = 1
+
+label-connected = %upspeed:9%
+label-disconnected =
+
+format-connected-prefix = 
+format-connected-prefix-foreground = ${theme.mono3}
+format-connected-underline = ${theme.mono3}
+
+[module/wireless-down]
+inherit = module/wireless-up
+label-connected = %downspeed:9%
+format-connected-prefix = 
+
+[module/wireless-ip]
+type = internal/network
+interface = wlp8s0
+
+interval = 1
+
+label-connected = "%{F#98C379}%{F-} %local_ip%"
+label-disconnected =
+
+format-connected-underline = ${theme.green}
