@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+xkbcomp $HOME/.config/xkb/keymap.xkb $DISPLAY
+xcape -e 'Caps_Lock=Escape'
+
+sh .fehbg &
+polybar top &
+polybar bottom &
+mpd
